@@ -1,0 +1,5 @@
+__pycache__/
+.venv/
+data/**/*.json
+!data/**/manifest.json
+!data/adjustment_factor_check.json

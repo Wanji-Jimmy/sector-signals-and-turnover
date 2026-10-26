@@ -1,0 +1,28 @@
+{
+  "title": "Sector Signals and Turnover: Does Rank Buffering Help?",
+  "status": "Written before acquiring 2026 sector prices or running any buffered strategy. This extension was motivated by already-seen 2019–2025 losses and costs. It is not part of the original frozen protocol.",
+  "original_protocol_sha256": "7e81c66b255792b0b2637dcc654cc3d61b912fe339258baad0c70ea9ad8b188f",
+  "question": "Can retaining near-boundary holdings reduce turnover without sacrificing more gross PnL than it saves in costs?",
+  "design": "Two fixed signals (raw and market-adjusted reversal) crossed with two membership policies (fresh top/bottom-three and rank buffer). All four reported, no winner selected or new threshold optimized.",
+  "universe": "Same eleven sector ETFs; SPY remains the market reference only.",
+  "holding_count_each_side": 3,
+  "rank_buffer": 2,
+  "ranks": "Ascending score with deterministic alphabetical ties: 1 is weakest, 11 strongest.",
+  "membership_rule": "Start each reporting period flat. Keep an existing long if its current rank is 1–5 and an existing short if rank is 7–11. Fill vacancies on each side in most-extreme current rank order, maintaining three distinct longs and three distinct shorts. With buffer zero this must equal fresh top/bottom-three.",
+  "state_reset": "Construct buffered holdings separately within each reporting period. First tradable interval initializes from current fresh ranks, never carries membership from a prior period. Prior holdings only, not future returns, influence the next membership decision.",
+  "weights_and_account": "Every weekly entry rebalances the selected six holdings to +1/6 or -1/6 of fixed USD100000 gross notional, including small price-drift trades when membership is unchanged. Same adjusted-open proxy, net turnover, final liquidation, 5bp one-way primary cost and 1% short borrow as the original study.",
+  "periods": [
+    {"name": "earlier_seen", "start": "2019-01-01", "end": "2021-12-31", "interpretation": "Exploratory extension on previously observed data"},
+    {"name": "later_seen", "start": "2022-01-01", "end": "2025-12-31", "interpretation": "Exploratory extension on previously observed data; not a fresh holdout"},
+    {"name": "new_period_2026", "start": "2026-01-01", "end": "2026-10-23", "interpretation": "Newly acquired historical period after extension specification; not prospective live trading and not globally unseen market history"}
+  ],
+  "fresh_data": "Download all twelve symbols through 2026-10-23 only after saving this file and its hash. Exclude partial current trading day and incomplete holding weeks. Preserve original snapshots and results. Check overlapping historical returns against original snapshot; do not splice incompatible price levels.",
+  "primary_comparisons": "Within each signal, buffered minus fresh weekly net PnL, reporting both comparisons rather than choosing the better result.",
+  "decomposition": "Delta net PnL = delta gross PnL + saved trading costs + saved borrow costs. Also report replaced holding names, actual dollar turnover, and ex-ante basket beta/volatility; a lower turnover number alone is not success.",
+  "crossover_cost": "If fresh turnover exceeds buffered turnover, crossover one-way bp = (fresh gross minus buffered gross plus buffered borrow minus fresh borrow)/(N*(fresh turnover-buffered turnover))*10000. This is an ex-post linear accounting diagnostic, not an optimized execution setting. Report signed values and interpretation; undefined when turnover difference is near zero.",
+  "signal_diagnostics": "For each week, compute Spearman rank IC between negative signal score (larger means stronger rebound forecast) and next-open-to-next-open ETF returns. Average ties in ranks. One weekly cross-section is one observation. Report IC and week-to-week rank persistence separately for raw/adjusted signals; buffering does not alter the underlying score and cannot claim to improve its IC.",
+  "uncertainty": "Paired four-week moving-block bootstrap, 5000 draws, seed 260126, mean weekly differences and descriptive intervals. Same block method for mean IC. Annual summaries for seen dates; 2026 is partial-year with few weekly observations, so no claim of established persistent edge.",
+  "unchanged": "No score lookback, beta estimation, cost, weight, leverage or holding-horizon changes. No PCA, HMM, optimizer, machine learning model or additional parameter sweep.",
+  "data_and_fills": "All previous adjusted-price, vendor revision, historical calendar, funding/borrow and actual-fill limitations remain. Fixed gross exposure is not fixed risk or guaranteed beta neutrality.",
+  "stop_condition": "Complete the four-way comparison, diagnostics, accounting identity tests and independent verification. Preserve negative results; no tuning after observing 2026."
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "symbol": "XLB",
+    "event_checks": 84,
+    "event_checks_common_window": 30,
+    "max_absolute_difference_all": 8.067605682393619e-07,
+    "max_absolute_difference_common": 3.199660991715092e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "XLE",
+    "event_checks": 85,
+    "event_checks_common_window": 31,
+    "max_absolute_difference_all": 9.358236182643864e-07,
+    "max_absolute_difference_common": 2.897878367269513e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "XLF",
+    "event_checks": 84,
+    "event_checks_common_window": 30,
+    "max_absolute_difference_all": 8.78293297867927e-07,
+    "max_absolute_difference_common": 3.51486877492313e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "XLI",
+    "event_checks": 84,
+    "event_checks_common_window": 30,
+    "max_absolute_difference_all": 6.397986361816876e-07,
+    "max_absolute_difference_common": 5.250128091160988e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "XLK",
+    "event_checks": 78,
+    "event_checks_common_window": 30,
+    "max_absolute_difference_all": 6.354125697827229e-07,
+    "max_absolute_difference_common": 5.40312620422867e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "XLP",
+    "event_checks": 84,
+    "event_checks_common_window": 30,
+    "max_absolute_difference_all": 7.064007035983977e-07,
+    "max_absolute_difference_common": 3.184635174457995e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "XLU",
+    "event_checks": 84,
+    "event_checks_common_window": 30,
+    "max_absolute_difference_all": 7.20238712559329e-07,
+    "max_absolute_difference_common": 3.0472997469832563e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "XLV",
+    "event_checks": 85,
+    "event_checks_common_window": 31,
+    "max_absolute_difference_all": 1.0728636137269376e-06,
+    "max_absolute_difference_common": 3.4714640739785807e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "XLY",
+    "event_checks": 84,
+    "event_checks_common_window": 30,
+    "max_absolute_difference_all": 6.011210551548629e-07,
+    "max_absolute_difference_common": 4.256606962460552e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "XLC",
+    "event_checks": 30,
+    "event_checks_common_window": 30,
+    "max_absolute_difference_all": 3.981469266500781e-07,
+    "max_absolute_difference_common": 3.981469266500781e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "XLRE",
+    "event_checks": 41,
+    "event_checks_common_window": 30,
+    "max_absolute_difference_all": 3.295557582383424e-07,
+    "max_absolute_difference_common": 2.605183557768953e-07,
+    "common_window_differences_over_1e-5": []
+  },
+  {
+    "symbol": "SPY",
+    "event_checks": 84,
+    "event_checks_common_window": 30,
+    "max_absolute_difference_all": 6.834342967110274e-07,
+    "max_absolute_difference_common": 2.798071453424811e-07,
+    "common_window_differences_over_1e-5": []
+  }
+]
