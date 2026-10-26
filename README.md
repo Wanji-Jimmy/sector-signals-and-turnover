@@ -1,18 +1,20 @@
 # Sector Signals and Turnover
 
-Can trading less improve a short-term reversal strategy? This Python study compares two signals across eleven US sector ETFs, then tests whether keeping positions longer saves enough in trading costs to help.
+Can holding positions longer improve a short-term reversal strategy? This study compares two signals across eleven US sector ETFs, with either fresh weekly selections or a fixed rule that retains some existing holdings.
 
-Each week, the signals rank five-day returns, either raw or adjusted for exposure to SPY estimated from 126 earlier days. Fresh selection buys the three weakest sectors and shorts the three strongest. A fixed rank buffer keeps a long at ranks 1-5 or a short at ranks 7-11, filling vacancies from the extremes. Signals use the weekly close; trading starts at the next session's adjusted-open proxy.
+**Trading less saved fees, but did not improve the 2026 result.** Across 41 complete weeks, the retention rule cut turnover by 24-27%, while both signals had worse net P&L. All four variants lost money in the earlier 2022-2025 period.
 
-All four variants lost money in 2022-2025. Across 41 complete weeks in 2026, buffering cut turnover by 24-27%, but both signals had worse net P&L. The raw signal saved $842 in fees but lost $11,307 in gross P&L relative to fresh selection. Lower turnover alone did not help.
+![2026 cumulative net P&L: both buffered policies finish below their fresh-selection counterparts](results/extension_pnl.png)
 
-The model resets to $100,000 gross exposure ($50,000 long and $50,000 short), not account capital. Net P&L deducts 5 bp per dollar traded and 1% annual short borrow. Adjusted opens are price proxies; spread, impact and borrow availability are not observed.
+Solid lines use fresh selections; dashed lines use the retention rule. The raw signal saved $842 in fees but lost $11,307 in gross P&L relative to fresh selection.
 
-The buffer was designed after seeing 2019-2025 results. Its protocol preceded the 2026 download, but this is historical research, not a live test. Neither 2026 signal's mean rank-correlation interval excludes zero.
+The model targets $100,000 gross exposure ($50,000 long and $50,000 short), not account capital. Net P&L deducts 5 bp per dollar traded and 1% annual short borrow. Adjusted opens are price proxies; spread, impact and borrow availability are unobserved.
 
-Open [results/report.html](results/report.html) locally to view the saved figures and weekly ETF attribution. No market data is needed. [Full study and sources](docs/STUDY.md) explain the accounting and limitations.
+The retention rule was designed after seeing 2019-2025 results. Its protocol preceded the 2026 download, but this is historical research, not a live test or evidence of a persistent edge.
 
-To run the 29 synthetic tests from the repository root:
+**View the results:** download the repository using **Code > Download ZIP**, unzip it, and open [results/report.html](results/report.html) in a browser. GitHub displays its source. The saved figures and weekly ETF table need no market data.
+
+**Run the tests:** from the repository root, install dependencies and run 29 synthetic checks:
 
 ```bash
 python3 -m venv .venv
@@ -21,4 +23,4 @@ python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v
 ```
 
-The four scripts are in `study/`. Recalculation uses `python study/report.py --extension` and requires the original snapshots listed in the [data manifests](docs/STUDY.md#view-or-run-locally). Raw downloads are excluded; the loader checks their hashes. The saved results retain their original evaluation provenance. Earlier reports remain on the [archive branch](https://github.com/Wanji-Jimmy/sector-signals-and-turnover/tree/archive/before-2026-10-26-simplification).
+**Recalculate:** `python study/report.py --extension` requires the excluded original price snapshots. See the [data instructions](docs/STUDY.md#view-or-run-locally), [method](docs/STUDY.md#the-four-way-comparison) and [code reading order](docs/STUDY.md#reading-the-code).

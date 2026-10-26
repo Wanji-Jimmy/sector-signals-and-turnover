@@ -80,7 +80,7 @@ There are no historical bid/ask, order-book, impact, borrow-availability, intere
 
 ## View or run locally
 
-The supplied `results/report.html` and its figures can be opened directly without raw market data. The interactive weekly attribution table is embedded in the HTML. This is the saved study, not a fresh calculation.
+Download the repository with **Code > Download ZIP**, unzip it, and open `results/report.html` in a browser. GitHub displays the HTML source rather than running it. Keep the report and its figures together in `results/`; no raw market data is needed. The interactive weekly attribution table is embedded in the HTML. This is the saved study, not a fresh calculation.
 
 To install dependencies and run the synthetic correctness tests (no market data required):
 
@@ -108,6 +108,14 @@ The script resolves inputs and outputs from its own repository location. From an
 This regenerates `results/report.html`. `python study/report.py` reproduces the original experiment and makes it the current report; `python study/report.py --extension` restores the extended report. The archived first report remains on the archive branch. Saved-report viewing and synthetic tests work without the excluded snapshots; exact historical recalculation requires them.
 
 Core calculation files are `study/data.py`, `study/analysis.py` and `study/extension.py`; `study/report.py` writes the output. The two protocols are stored alongside them, and the two test files are in `tests/`. The tests check the ledger, dates, buffering boundaries, period resets, future-data isolation, zero-buffer equivalence and cost attribution. `results/extension_weekly.csv` records every holding and trade; `extension_diagnostics.csv` records weekly IC; `extension_summary.json` contains aggregate results and provenance. The two JSON protocols keep the original and later research questions distinct.
+
+## Reading the code
+
+1. [analysis.py](../study/analysis.py): follow signal construction, next-open timing and the weekly P&L ledger.
+2. [extension.py](../study/extension.py): see how the rank buffer changes holdings, then how costs and individual ETFs explain the difference.
+3. [report.py](../study/report.py): follow the calculations into CSV files, charts and the local HTML report.
+
+[data.py](../study/data.py) loads the checksummed snapshots. The [analysis tests](../tests/test_analysis.py) include hand-calculated accounting examples; the [extension tests](../tests/test_extension.py) check retention boundaries and attribution.
 
 ## Sources and implementation choices
 
