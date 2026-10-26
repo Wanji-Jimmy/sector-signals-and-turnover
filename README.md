@@ -1,56 +1,24 @@
 # Sector Signals and Turnover
 
-**Can trading less improve a short-term reversal strategy?**
+Can trading less improve a short-term reversal strategy? This Python study compares two signals across eleven US sector ETFs, then tests whether keeping positions longer saves enough in trading costs to help.
 
-A Python study of eleven US sector ETFs. It compares two signals and two ways to update holdings, then traces the differences to individual ETFs and trading costs. The useful finding is a failed improvement: keeping positions longer saved fees, but also kept some losing positions.
+Each week, the signals rank five-day returns, either raw or adjusted for exposure to SPY estimated from 126 earlier days. Fresh selection buys the three weakest sectors and shorts the three strongest. A fixed rank buffer keeps a long at ranks 1-5 or a short at ranks 7-11, filling vacancies from the extremes. Signals use the weekly close; trading starts at the next session's adjusted-open proxy.
 
-[Full method and references](docs/STUDY.md) · [Interactive report](results/report.html) · [Extension protocol](extension_protocol.json)
+All four variants lost money in 2022-2025. Across 41 complete weeks in 2026, buffering cut turnover by 24-27%, but both signals had worse net P&L. The raw signal saved $842 in fees but lost $11,307 in gross P&L relative to fresh selection. Lower turnover alone did not help.
 
-## Main result
+The model resets to $100,000 gross exposure ($50,000 long and $50,000 short), not account capital. Net P&L deducts 5 bp per dollar traded and 1% annual short borrow. Adjusted opens are price proxies; spread, impact and borrow availability are not observed.
 
-Each rule targets **$100,000 gross exposure: $50,000 long and $50,000 short**, reset weekly. This is a model position size, not invested capital. Net P&L includes 5 bp per dollar traded and 1% annual short borrow. A basis point is 0.01%.
+The buffer was designed after seeing 2019-2025 results. Its protocol preceded the 2026 download, but this is historical research, not a live test. Neither 2026 signal's mean rank-correlation interval excludes zero.
 
-| Net P&L | 2019–2021 | 2022–2025 | Jan–Oct 2026 |
-|---|---:|---:|---:|
-| Raw signal, fresh holdings | −$3,807 | −$9,125 | +$9,183 |
-| Raw signal, rank buffer | +$7,583 | −$7,423 | −$1,282 |
-| Market-adjusted, fresh holdings | +$4,335 | −$16,596 | +$4,977 |
-| Market-adjusted, rank buffer | +$4,502 | −$12,473 | +$1,527 |
-| Complete weekly intervals | 155 | 208 | 41 |
+Open [results/report.html](results/report.html) locally to view the saved figures and weekly ETF attribution. No market data is needed. [Full study and sources](docs/STUDY.md) explain the accounting and limitations.
 
-In 2026, the raw-signal buffer reduced turnover by **27.3%** and saved **$842** in trading costs. But gross P&L fell **$11,307**, leaving net P&L **$10,465 worse**. About 69% of that gross shortfall came from differences in short holdings. Reducing turnover did not automatically improve the strategy.
-
-![2026 cumulative net P&L](results/extension_pnl.png)
-
-## The experiment
-
-- **Signals:** rank five-day returns, either raw or adjusted for each ETF's estimated exposure to SPY. Beta uses 126 prior daily returns ending before the signal window.
-- **Fresh holdings:** buy the three weakest sectors and short the three strongest. Form signals at the weekly close and trade at the following session's adjusted-open reference.
-- **Rank buffer:** retain a long while it stays in ranks 1–5 and a short while it stays in ranks 7–11. Refill vacancies and reset equal dollar weights each week. The two-rank buffer is fixed.
-
-The report explains each week's difference through gross P&L, transaction costs and borrow costs. Its interactive table shows all eleven ETFs. A concentration check also asks how much of the result comes from a few good weeks; this is arithmetic sensitivity, not an executable strategy that can skip weeks in advance.
-
-## View and run
-
-Download the repository and open `results/report.html` locally. Its interactive table and figures work without market data. GitHub's file view displays HTML source rather than running the report.
-
-Tests use synthetic data; no download or API key is needed:
+To run the 29 synthetic tests from the repository root:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-python -m unittest -v test_analysis.py test_extension.py
+python -m unittest discover -s tests -v
 ```
 
-**Historical recalculation requires the original price snapshots.** Raw Yahoo responses are excluded. The [original manifest](data/manifest.json) and [2026 manifest](data/extension_2026/manifest.json) record filenames, source URLs, retrieval times and checksums. Place matching files in `data/` and `data/extension_2026/`, then run `python report.py --extension`. The loader rejects different snapshots. New downloads may contain revisions and cannot be called exact reproduction; see the [data notes](docs/STUDY.md#view-or-run-locally).
-
-## What the results support
-
-The buffer was designed after examining 2019–2025 results. Those years are exploratory for this extension. The extension protocol preceded the new 2026 download, but this remains historical research, not prospective live trading. No parameters were changed to improve its reported results.
-
-All four variants lost money in 2022–2025. The 2026 results span only 41 weeks; both signals' mean rank-correlation intervals include zero. Adjusted opens are price proxies, costs are assumptions, and the model omits impact, spread, borrow availability and margin constraints. It does not establish a persistent trading edge.
-
-The core is four Python files and two test files. The [full study](docs/STUDY.md) documents the accounting, earlier experiment, source projects and limitations.
-
-The published acquisition metadata omits first/last raw price-row previews; source-file checksums are unchanged. The original manifest hash is recorded in the export.
+The four scripts are in `study/`. Recalculation uses `python study/report.py --extension` and requires the original snapshots listed in the [data manifests](docs/STUDY.md#view-or-run-locally). Raw downloads are excluded; the loader checks their hashes. The saved results retain their original evaluation provenance. Earlier reports remain on the [archive branch](https://github.com/Wanji-Jimmy/sector-signals-and-turnover/tree/archive/before-2026-10-26-simplification).

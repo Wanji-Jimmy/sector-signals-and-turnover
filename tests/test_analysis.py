@@ -3,14 +3,18 @@ from copy import deepcopy
 from datetime import date, timedelta
 import json
 from pathlib import Path
+import sys
 import unittest
 
 import numpy as np
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "study"))
+
 from analysis import STRATEGIES, account_period, build_signals, run_study, target_weights
 
 
-PROTOCOL = json.loads((Path(__file__).parent / "protocol.json").read_text())
+PROTOCOL = json.loads((ROOT / "study" / "protocol.json").read_text())
 SYMBOLS = PROTOCOL["symbols"] + [PROTOCOL["market"]]
 
 

@@ -66,7 +66,7 @@ The complete asset ledger is `results/asset_attribution.csv`; `results/explanati
 
 The original protocol was saved before the first raw-versus-adjusted run. The buffer extension was motivated by already-seen 2019–2025 costs; those years are **exploratory for this extension**, not a new holdout.
 
-`extension_protocol.json` was saved and hashed before downloading 2026 prices or running the buffer. That additional historical period supplies 41 complete intervals from 5 January to 19 October 2026; later incomplete holding intervals are excluded. It is newly acquired history for this experiment, **not prospective live trading**. No parameter was changed in response to its results. The original input snapshot remains in the local `data/` directory and is excluded from publication. The first report and its derived results are preserved under `results/first_version/`.
+`study/extension_protocol.json` was saved and hashed before downloading 2026 prices or running the buffer. That additional historical period supplies 41 complete intervals from 5 January to 19 October 2026; later incomplete holding intervals are excluded. It is newly acquired history for this experiment, **not prospective live trading**. No parameter was changed in response to its results. The original input snapshot remains in the local `data/` directory and is excluded from publication. The first report, its derived results and the earlier repository layout are preserved on the [archive branch](https://github.com/Wanji-Jimmy/sector-signals-and-turnover/tree/archive/before-2026-10-26-simplification). Download that branch to view the first report locally with its figures.
 
 ## Prices, timing and costs
 
@@ -88,20 +88,26 @@ To install dependencies and run the synthetic correctness tests (no market data 
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-python -m unittest -v test_analysis.py test_extension.py
+python -m unittest discover -s tests -v
 ```
 
 **Before recalculating the historical study**, provide the checksummed price snapshots at `data/` and `data/extension_2026/`. Raw responses are excluded from version control; the two manifests list every required filename, exact source URL, retrieval time and hash. The loader deliberately rejects a different snapshot. A new Yahoo download may contain revised values and is not an exact reproduction of these results; audit such revisions before defining a new dataset or updating a manifest. The public chart endpoint is unofficial and may change or throttle. No API key was used for this run. Data access and redistribution rights are separate questions.
 
+The [original manifest](../data/manifest.json) and [2026 manifest](../data/extension_2026/manifest.json) retain raw-source checksums. Published acquisition metadata omits first/last raw price-row previews; the source-file checksums are unchanged. The original manifest hash is recorded in the export.
+
+The saved result JSON files retain the source hashes and filenames recorded at their original evaluation. They describe that evaluation, not the relocated scripts in this layout. Numerical outputs have not been regenerated to update those hashes. A new calculation records the current `study/` source paths and hashes.
+
 Once the matching input files are available:
 
 ```bash
-python report.py --extension
+python study/report.py --extension
 ```
 
-This regenerates `results/report.html`. `python report.py` reproduces the original experiment and makes it the current report; `python report.py --extension` restores the extended report. The archived first report remains available. Saved-report viewing and synthetic tests work without the excluded snapshots; exact historical recalculation requires them.
+The script resolves inputs and outputs from its own repository location. From another working directory, use the absolute path, for example `python /path/to/sector-signals-and-turnover/study/report.py --extension`. Without the snapshots it exits with a missing-input message and leaves the saved results unchanged.
 
-Core calculation files are `data.py`, `analysis.py` and `extension.py`; `report.py` writes the output. The two test files check the ledger, dates, buffering boundaries, period resets, future-data isolation, zero-buffer equivalence and cost attribution. `results/extension_weekly.csv` records every holding and trade; `extension_diagnostics.csv` records weekly IC; `extension_summary.json` contains aggregate results and provenance. Two small JSON protocols keep the original and later research questions distinct.
+This regenerates `results/report.html`. `python study/report.py` reproduces the original experiment and makes it the current report; `python study/report.py --extension` restores the extended report. The archived first report remains on the archive branch. Saved-report viewing and synthetic tests work without the excluded snapshots; exact historical recalculation requires them.
+
+Core calculation files are `study/data.py`, `study/analysis.py` and `study/extension.py`; `study/report.py` writes the output. The two protocols are stored alongside them, and the two test files are in `tests/`. The tests check the ledger, dates, buffering boundaries, period resets, future-data isolation, zero-buffer equivalence and cost attribution. `results/extension_weekly.csv` records every holding and trade; `extension_diagnostics.csv` records weekly IC; `extension_summary.json` contains aggregate results and provenance. The two JSON protocols keep the original and later research questions distinct.
 
 ## Sources and implementation choices
 

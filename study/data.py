@@ -9,12 +9,12 @@ from zoneinfo import ZoneInfo
 import numpy as np
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def load_data(directory=ROOT / "data", end=None):
     directory = Path(directory)
-    protocol = json.loads((ROOT / "protocol.json").read_text())
+    protocol = json.loads((ROOT / "study" / "protocol.json").read_text())
     end = end or protocol["evaluation_end"]
     manifest = json.loads((directory / "manifest.json").read_text())
     sources = {row["symbol"]: row for row in manifest["symbols"]}
@@ -54,7 +54,7 @@ def load_data(directory=ROOT / "data", end=None):
         "provider": manifest["provider"], "download_audit_utc": manifest["audit_utc"],
         "sessions": len(dates), "first_date": dates[0], "last_date": dates[-1],
         "symbols": symbols, "raw_sha256": {s: sources[s]["sha256"] for s in symbols},
-        "protocol_sha256": hashlib.sha256((ROOT / "protocol.json").read_bytes()).hexdigest(),
+        "protocol_sha256": hashlib.sha256((ROOT / "study" / "protocol.json").read_bytes()).hexdigest(),
         "calendar_check": "All symbols match SPY; no independent exchange-calendar audit",
         "price_convention": "Open times adjusted-close/close; a total-return proxy, not an executable price",
     }

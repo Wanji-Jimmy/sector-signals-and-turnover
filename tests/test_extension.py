@@ -2,9 +2,13 @@
 from copy import deepcopy
 import json
 from pathlib import Path
+import sys
 import unittest
 
 import numpy as np
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "study"))
 
 from analysis import NOTIONAL, STRATEGIES, account_period, build_signals, target_weights
 from extension import (_attribution, _concentration, _diagnostic_summary, _period_signals,
@@ -13,7 +17,7 @@ from extension import (_attribution, _concentration, _diagnostic_summary, _perio
 from test_analysis import PROTOCOL, SYMBOLS, synthetic
 
 
-EXTENSION = json.loads((Path(__file__).parent / "extension_protocol.json").read_text())
+EXTENSION = json.loads((ROOT / "study" / "extension_protocol.json").read_text())
 SECTORS = PROTOCOL["symbols"]
 
 

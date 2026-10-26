@@ -1,4 +1,4 @@
-"""Run the fixed study and write three figures and a short local report."""
+"""Recalculate the study from the original snapshots and write a local report."""
 
 import argparse
 import csv
@@ -139,7 +139,7 @@ The earlier ranking did not persist in the later evaluation. Both periods use th
 <p>Prices are Yahoo Finance historical snapshots fetched on 26 October 2026. Adjusted opens are total-return proxies, not executable dollar prices.
 ETF holdings and index definitions change. Dollar-neutral entry weights do not guarantee beta neutrality. Borrow availability, market impact and exact dividend cash accounting are not observed.
 The interval resamples four-week blocks; it cannot create more independent years of evidence.</p>
-<p class="small">Source files: <a href="summary.json">results and provenance</a> · <a href="weekly.csv">weekly ledger</a> · <a href="../protocol.json">pre-run protocol</a> · <a href="../README.md">method and sources</a></p>
+<p class="small">Source files: <a href="summary.json">results and provenance</a> · <a href="weekly.csv">weekly ledger</a> · <a href="../study/protocol.json">pre-run protocol</a> · <a href="../README.md">method and sources</a></p>
 </main></html>'''
     (output / "report.html").write_text(html)
 
@@ -154,7 +154,7 @@ def main():
     summary["provenance"] = provenance
     summary["generated_utc"] = datetime.now(timezone.utc).isoformat()
     summary["source_sha256"] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
-                                for name in ("analysis.py", "data.py", "report.py", "protocol.json")}
+                                for name in ("study/analysis.py", "study/data.py", "study/report.py", "study/protocol.json")}
     output = ROOT / "results"
     output.mkdir(exist_ok=True)
     (output / "summary.json").write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n")
@@ -365,16 +365,16 @@ The improvement seen in 2022–2025 did not carry into this {first["weeks"]}-wee
 <p>The ex-post 2026 crossover one-way costs are {crosses}. These solve the linear cost accounting identity; they are not recommended trading costs or optimized settings.</p>
 <p>2019–2021 and 2022–2025 were already observed and are exploratory for this extension. 2026 prices were acquired after the extension specification, but remain historical data, not a prospective live test or globally unseen history. Earlier periods retain their original snapshots; the 2026 run uses its own internally consistent snapshot with prior history for signals. Price levels are not spliced.</p>
 <p>Adjusted opens are total-return proxies rather than executable fills. Vendor revisions, changing ETF holdings, unavailable spreads and depth, assumed borrow, and simplified distribution and funding accounting remain limitations.</p>
-<p><a href="extension_summary.json">Summary and provenance</a> · <a href="extension_weekly.csv">Weekly ledger</a> · <a href="extension_diagnostics.csv">Weekly signal diagnostics</a> · <a href="../extension_protocol.json">Extension protocol</a> · <a href="../README.md">Method and sources</a> · <a href="first_version/report.html">Archived first report</a></p></details>
+<p><a href="extension_summary.json">Summary and provenance</a> · <a href="extension_weekly.csv">Weekly ledger</a> · <a href="extension_diagnostics.csv">Weekly signal diagnostics</a> · <a href="../study/extension_protocol.json">Extension protocol</a> · <a href="../README.md">Method and sources</a> · <a href="https://github.com/Wanji-Jimmy/sector-signals-and-turnover/blob/archive/before-2026-10-26-simplification/results/first_version/report.html">Archived first report</a></p></details>
 </main></body></html>'''
     (output / "report.html").write_text(html)
 
 
 def run_extension_report():
     from extension import attribute_portfolios, run_extension
-    specification = json.loads((ROOT / "extension_protocol.json").read_text())
+    specification = json.loads((ROOT / "study" / "extension_protocol.json").read_text())
     expected = specification["original_protocol_sha256"]
-    if hashlib.sha256((ROOT / "protocol.json").read_bytes()).hexdigest() != expected:
+    if hashlib.sha256((ROOT / "study" / "protocol.json").read_bytes()).hexdigest() != expected:
         raise ValueError("Original protocol differs from the extension's frozen reference")
     summary, weekly, diagnostics, provenance = None, [], [], {}
     explanation, assets = {"periods": {}}, []
@@ -397,9 +397,9 @@ def run_extension_report():
         explanation["periods"].update(explained["periods"])
         assets.extend(contributions)
     summary.update(provenance=provenance, generated_utc=datetime.now(timezone.utc).isoformat(),
-                   extension_protocol_sha256=hashlib.sha256((ROOT / "extension_protocol.json").read_bytes()).hexdigest(),
+                   extension_protocol_sha256=hashlib.sha256((ROOT / "study" / "extension_protocol.json").read_bytes()).hexdigest(),
                    source_sha256={name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
-                                  for name in ("analysis.py", "data.py", "extension.py", "report.py", "protocol.json", "extension_protocol.json")})
+                                  for name in ("study/analysis.py", "study/data.py", "study/extension.py", "study/report.py", "study/protocol.json", "study/extension_protocol.json")})
     output = ROOT / "results"
     output.mkdir(exist_ok=True)
     (output / "extension_summary.json").write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n")
@@ -415,4 +415,7 @@ def run_extension_report():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except FileNotFoundError as error:
+        raise SystemExit(f"Missing input: {error.filename}. See docs/STUDY.md for the required snapshots.") from error
